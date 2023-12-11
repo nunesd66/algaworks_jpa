@@ -6,16 +6,17 @@
 
 &nbsp;
 
-## :receipt:Sumário
+## :receipt: Sumário
 
 0. [Requisitos](#requisitos)
-0. [Introdução](#intro)
-0. [Modelo de domínio](#modelo-dominio)
-0. [Tipos de relacionamentos](#tipos-relacionamentos)
-0. [Anotações de testes](#anotacoes-testes)
-0. [Anotações Hibernate (Jakarta)](#anotacoes-hibernate)
-0. [Arquivo persistence.xml](#arquivo-persistence)
-0. [Arquivos e Classes do Projeto](#arquivos)
+1. [Introdução](#intro)
+2. [Modelo de domínio](#modelo-dominio)
+3. [Tipos de relacionamentos](#tipos-relacionamentos)
+4. [Anotações de testes](#anotacoes-testes)
+5. [Anotações Hibernate (Jakarta)](#anotacoes-hibernate)
+6. [Arquivo persistence.xml](#arquivo-persistence)
+7. [Arquivos e Classes do Projeto](#arquivos)
+8. [Estados e ciclo de vida dos objetos](#ciclo-vida)
 
 &nbsp;
 
@@ -178,6 +179,34 @@
 
 > Especifica um campo ou propriedade persistente de uma entidade cujo valor é uma instância de uma classe incorporável. Ou seja, uma extensão da classe, que não terá mapeamento, porém no banco, a tabela incorpora os atributos da classe incorporável na classe pai.
 
+#### @PrePersist
+
+> Anotação para atribuir um método como de callback para eventos que deverão ser executados **antes** de **persistir** a entidade referente a classe no banco de dados.
+
+#### @PostPersist
+
+> Anotação para atribuir um método como de callback para eventos que deverão ser executados **depois** de **persistir** a entidade referente a classe no banco de dados.
+
+#### @PreUpdate
+
+> Anotação para atribuir um método como de callback para eventos que deverão ser executados **antes** de **atualizar** a entidade referente a classe no banco de dados.
+
+#### @PostUpdate
+
+> Anotação para atribuir um método como de callback para eventos que deverão ser executados **depois** de **atualizar** a entidade referente a classe no banco de dados.
+
+#### @PreRemove
+
+> Anotação para atribuir um método como de callback para eventos que deverão ser executados **antes** de **remover** a entidade referente a classe no banco de dados.
+
+#### @PostLoad
+
+> Anotação para atribuir um método como de callback para eventos que deverão ser executados **depois** de **carregar** a entidade referente a classe no banco de dados.
+
+#### @EntityListeners
+
+> Anotação usada nas entidades, para ouvir eventos e executar métodos de classes que foram configurados para ouvir a entidade.
+
 &nbsp;
 
 ## :electric_plug: 6. Arquivo persistence.xml <a id="arquivo-persistence"></a>
@@ -295,3 +324,62 @@
 - RelacionamentoOneToManyTest
 - RelacionamentoOneToOneTest
 - RemovendoEntidadesReferenciadasTest
+
+#### `ecommerce/conhecendoentitymanager/`
+
+- EstadosECicloDeVidaTest
+- CachePrimeiroNivelTest
+- GerenciamentoTransacoesTest
+- ContextoDepersistenciaTest
+- FlushTest
+- CallbacksTest
+
+&nbsp;
+
+## :arrows_counterclockwise: 8. Estados e ciclo de vida dos objetos <a id="ciclo-vida"></a>
+
+### Estados:
+
+0. EntityManager:
+    - Serviço responsável por gerenciar o clico de vida das entidades.
+1. Transient:
+    - Estado novo, quando a entidade é criada, mas ainda não foi persistida no banco de dados. Mudanças de estado da entidade não são sincronizadas com o banco de dados.
+2. Managed:
+    - Estado gerenciado, quando a entidade foi persistida no banco de dados e está em estado gerenciável. Aqui as mudanças de estados da entidade são sincronizados com o banco de dados quando a transação for finalizada com sucesso.
+3. Detacjed:
+    - Estado desanexado, quando a entidade já foi persistida no banco de dados, mas não está em contexto gerenciável, ou seja, mudanças de estados não são sincronizados com o banco de dados.
+4. Removed:
+    - Estado removido, quando a entidade é agendada para ser removida do banco de dados e será removida quando a transação for finalizada com sucesso.
+
+![Diagrama de estados](./asserts/diagramadeestados.png)
+
+### Cache de primeiro nível
+
+- É a memória gerenciável do EntityManager, onde fica guardado os objetos gerenciáveis.
+- Usado para performar a aplicação, economizando em tempo de comunicação com o banco de dados.
+
+### Gerenciamento de transações
+
+#### Transação
+
+> Período de tempo que pode fazer mudanças no banco com consistência.
+
+#### Rollback
+
+> Defaz todas as mudanças que não foram salvas.
+
+#### Flush
+
+> Força atualizações dos estados em gerenciamento.
+
+#### Contexto de persistência
+
+> Quando um objeto está no contexto de persistência, ele já está ou já foi persistido pelo entityManager e está sendo gerenciado. Quando um objeto no conexto de persistência é alterado, ocorre um "dirty checking", que é a atualização do objeto.
+
+#### Callbacks para eventos do ciclo de vida
+
+> Eventos são CRUD: Create, Read, Update, Delete. E para cada evento, podemos ter um callback, ou seja, executar alguma ação na classe quando ocorre algum evento.
+
+#### Listeners para eventos do ciclo de vida
+
+> 
