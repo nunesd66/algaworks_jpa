@@ -17,6 +17,7 @@
 6. [Arquivo persistence.xml](#arquivo-persistence)
 7. [Arquivos e Classes do Projeto](#arquivos)
 8. [Estados e ciclo de vida dos objetos](#ciclo-vida)
+9. [Mapeamento Avançado](#mapeamento-avancado)
 
 &nbsp;
 
@@ -87,15 +88,23 @@
 
 ### @JoinColumn
 
-> Usada para indicar que a classe que usa essa anotação sob algum atributo é a dona do relacionamento, ou seja, o Owner.
+> Usada para indicar que a classe que usa essa anotação sob algum atributo é a dona do relacionamento, ou seja, o Owner. Na prática, adiciona uma coluna estrangeira na tabela Owner referenciando a outra entidade.
 
-> Na prática, adiciona uma coluna estrangeira na tabela Owner referenciando a outra entidade.
+> Propriedade **name**: nome da coluna no banco de dados que referencia o atributo da entidade anotado.
 
 ### @JoinTable
 
-> Usada para definir uma tabela intermediária entre 2 entidades.
+> Usada para definir uma tabela intermediária entre 2 entidades. A tabela contém normalmente, apenas 2 colunas, para referenciar a primary key de ambas as tabelas.
 
-> A tabela contém normalmente, apenas 2 colunas, para referenciar a primary key de ambas as tabelas.
+> Propriedade **name**: nome da tabela associativa, que tem registros para informar a relação entre 2 entidades, normalmente referenciado pelo ID.
+
+> Propriedade **joinColumns**: informa a coluna de referência da entidade dona do relacionamento, normalmente o ID.
+
+> Propriedade **inverseJoinColumns**: informa a coluna de referência da outra entidade do relacionamento, normalmente o ID.
+
+### Propriedade optional
+
+> Por padrão, a propriedade tem valor *true* e todos os relacionamentos são opcionais e não obrigatórios. Em um relacionamento, onde a propriedade optional de forma explícita como *false*, define que o registro só poderá ser persistido caso os atributos não opcionais estejam preenchidos.
 
 ### Mapeamento Bidirecional
 
@@ -145,19 +154,37 @@
 
 > Especifica a tabela primária da entidade anotada. Se nenhuma anotação for especificada para uma entidade class, os valores padrão se aplicam.
 
+> Proriedade **name**: define o nome da entidade no banco de dados.
+
+> Em classes abstratas, pode-se usar essa anotação para classes que extendam a superclasse ter uma implementação genérica. No caso, é criado apenas uma tabela da superclasse com um atributo a mais para o tipo da classe.
+
+> Nas classes que implementam a classe abstrata, pode-se alterar o nome de referência delas com a anotação `@DiscriminatorValue("nome_entidade")`.
+
+#### @Inheritance
+
+> Anotação padrão implícita com propriedade padrão `strategy` como sendo `SINGLE_TABLE`. Isso significa que será criada apenas a tabela da superclasse com um atributo a mais, referenciando o tipo de classe que a implementa. Usando a `strategy` como `TABLE_PER_CLASS`, cria uma tabela por classe que extende da superclasse. Usando a `strategy` como `JOINED`, cria uma tabela por entidade.
+
+
 #### @Id
 
 > Especifica a chave primária de uma entidade. A coluna mapeada para a chave primária da entidade é assumida para ser a chave primária da tabela primária.
 
-#### @GeneratedValue(strategy = GenerationType.AUTO)
+#### @IdClass(ClasseComposta.class)
 
-> Estratégia de geração de valores de chaves primárias. Apenas pode ser usado em chaves primárias simples.
-> O GenerationType, quando não informado a strategy, é por padrão AUTO. Os valores disponíveis são:
+> Anotação que define uma classe de identificadores (IDs) compostos. Onde na entidade anotada, cada registro dela tem a necessidade de ser único por cada chave na classe de chaves compostas. Nesse caso, o id do registro é baseado nas chaves compostas.
+
+#### @GeneratedValue()
+
+> Informa que o JPA gerenciará a geração de valores de *primary keys*.
+
+> Propriedade **strategy**: por padrão AUTO. Os valores disponíveis são:
 > - AUTO - Indica que o provedor de persistência deve escolher um estratégia apropriada para o banco de dados específico.
 > - IDENTITY - Indica que o provedor de persistência deve atribuir chaves primárias para a entidade usando uma coluna de identidade de banco de dados.
 > - SEQUENCE - Indica que o provedor de persistência deve atribuir chaves primárias para a entidade usando uma sequência de banco de dados.
 > - TABLE - Indica que o provedor de persistência deve atribuir chaves primárias para a entidade usando um subjacente tabela de banco de dados para garantir exclusividade.
 > - UUID - Indica que o provedor de persistência deve atribuir chaves primárias para a entidade gerando uma RFC 4122 IDentifier universalmente exclusivo.
+
+> Propriedade **generator**: define o nome do gerador de IDs.
 
 #### @SequenceGenerator
 
@@ -167,9 +194,29 @@
 
 > Define um gerador de chave primária que pode ser referenciado pelo nome quando um elemento gerador é especificado para a anotação @GeneratedValue. Um gerador de tabela pode ser especificado na classe de entidade ou na chave primária campo ou propriedade. O escopo do nome do gerador é global para a unidade de persistência (em todos os tipos de gerador).
 
+> Propriedade **name**: define o nome do gerador de IDs.
+
+> Propriedade **table**: define o nome da tabela.
+
+> Proprieade **pkColumnName**: o nome da coluna referente a sequência de IDs.
+
+> Proprieade **pkColumnValue**: o valor da coluna referente a sequência de IDs.
+
+> Propriedade **valueColumnName**: o valor que será atribuído ao próximo registro.
+
+> Propriedade **inicialValue**: o valor inicial das PKs.
+
+> Propriedade **allocationSize**: aloca na memória o valor atribuído, até que o valor seja atingido, ele não consulta a base de dados.
+
 #### @Column
 
 > Especifica a coluna mapeada para uma propriedade ou campo persistente. Se nenhuma anotação for especificada, os valores padrão serão aplicados. A propriedade mais usada é o "name", alterando o nome da coluna referente ao atributo em questão.
+
+> Proriedade **name**: define o nome da coluna no banco de dados.
+
+> Proriedade **updatable**: por padrão, é atribuído como *true*. Tem como ação definir a permissão da atualização do atributo anotado quando o registro é atualizado.
+
+> Proriedade **insertable**: por padrão, é atribuído como *true*. Tem como ação definir a permissão de inserção do atributo anotado quando o registro é criado.
 
 #### @Enumerated(EnumType.STRING)
 
@@ -178,6 +225,44 @@
 #### @Embedded
 
 > Especifica um campo ou propriedade persistente de uma entidade cujo valor é uma instância de uma classe incorporável. Ou seja, uma extensão da classe, que não terá mapeamento, porém no banco, a tabela incorpora os atributos da classe incorporável na classe pai.
+
+#### @@EmbeddedId
+
+> Similar ao `@Embedded`, porém usado para para classes que implementam IDs compostos.
+
+#### @MapsId
+
+> Anotação que usa o atributo anotado da classe como sendo seu ID. Em chaves compostas é necessário anotar cada atributo que referencia a chave composta, informando o nome do atributo do ID composto: `@MapsId("nomeIdChaveComposta)`.
+
+#### @Transient
+
+> Designa uma propriedade que deve sera ignorada pelo JPA.
+
+#### @ElementCollection
+
+> Anotação para atributos de listas de valores não mapeados pelo JPA. Cria uma tabela associando cada valor ao ID da tabela owner. 
+
+> `@CollectionTable`: usado para customizar nomes da tabela.
+> - propriedade `name`: nome da tabela.
+> - propriedade `joinColumns`: nome da coluna referente ao ID da classe owner.
+> 
+> `@Column`: coluna que guardará os valores.
+> - propriedade `name`: nome da coluna que guardará os valores referente a coluna.
+> 
+> `@ @MapKeyColumn`: coluna que guardará a chave, quando a coleção for de Maps.
+> - propriedade `name`: nome da coluna que guardará os valores referente aos valores do Map.
+
+#### @Lob
+
+> Anotação para informar ao JPA que é um array de bytes destinado para salvar arquivos.
+
+#### @SecondaryTable
+
+> É usado para criar uma tabela com valores de uma ou mais tabelas.
+
+#### @MappedSuperclass
+
+> Classes com essa anotação podem ser extendidas por outras classes e serem reconhecidas pelo JPA como tendo os atributos da superclasse pertencentes a classe filha.
 
 #### @PrePersist
 
@@ -334,6 +419,10 @@
 - FlushTest
 - CallbacksTest
 
+#### `ecommerce/mapeamentoavancado/`
+
+- DetalhesColumnTest
+
 &nbsp;
 
 ## :arrows_counterclockwise: 8. Estados e ciclo de vida dos objetos <a id="ciclo-vida"></a>
@@ -380,6 +469,6 @@
 
 > Eventos são CRUD: Create, Read, Update, Delete. E para cada evento, podemos ter um callback, ou seja, executar alguma ação na classe quando ocorre algum evento.
 
-#### Listeners para eventos do ciclo de vida
+## :world_map: 9. Mapeamento Avançado <a id="mapeamento-avancado"></a>
 
-> 
+
