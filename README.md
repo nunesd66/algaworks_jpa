@@ -17,7 +17,6 @@
 6. [Arquivo persistence.xml](#arquivo-persistence)
 7. [Arquivos e Classes do Projeto](#arquivos)
 8. [Estados e ciclo de vida dos objetos](#ciclo-vida)
-9. [Mapeamento Avançado](#mapeamento-avancado)
 
 &nbsp;
 
@@ -160,10 +159,15 @@
 
 > Nas classes que implementam a classe abstrata, pode-se alterar o nome de referência delas com a anotação `@DiscriminatorValue("nome_entidade")`.
 
+> Propriedade **schema**: define o banco de dados usado.
+
+> Propriedade **catalog**: informa o catálogo ao qual a tabela usada pertence.
+
+> Propriedade **uniqueConstraints**: informa a coluna da tabela que não aceita valores repetidos. Caso seja atribuído em uma das @UniqueConstrait() mais de um valor, não poderá repetir a combinação dos valores.
+
 #### @Inheritance
 
 > Anotação padrão implícita com propriedade padrão `strategy` como sendo `SINGLE_TABLE`. Isso significa que será criada apenas a tabela da superclasse com um atributo a mais, referenciando o tipo de classe que a implementa. Usando a `strategy` como `TABLE_PER_CLASS`, cria uma tabela por classe que extende da superclasse. Usando a `strategy` como `JOINED`, cria uma tabela por entidade.
-
 
 #### @Id
 
@@ -208,6 +212,12 @@
 
 > Propriedade **allocationSize**: aloca na memória o valor atribuído, até que o valor seja atingido, ele não consulta a base de dados.
 
+> Propriedade **columnDefinition**: define as opções do atributo em ddl explícito.
+
+> Propriedade **precision**: define o tamanho do número, incluindo casas decimais.
+
+> Propriedade **scale**: define o número de casas decimais.
+
 #### @Column
 
 > Especifica a coluna mapeada para uma propriedade ou campo persistente. Se nenhuma anotação for especificada, os valores padrão serão aplicados. A propriedade mais usada é o "name", alterando o nome da coluna referente ao atributo em questão.
@@ -217,6 +227,14 @@
 > Proriedade **updatable**: por padrão, é atribuído como *true*. Tem como ação definir a permissão da atualização do atributo anotado quando o registro é atualizado.
 
 > Proriedade **insertable**: por padrão, é atribuído como *true*. Tem como ação definir a permissão de inserção do atributo anotado quando o registro é criado.
+
+> Propriedade **length**: especifica o tamanho alocado para a informação no banco de dados.
+
+> Propriedade **nullable**: se o atributo pode ser nulo.
+
+> Propriedade **unique**: atribui uma constante única de forma genérica para o atributo, de forma que não pode ter repetições desse atributo.
+
+> Propriedade **length**
 
 #### @Enumerated(EnumType.STRING)
 
@@ -296,7 +314,7 @@
 
 ## :electric_plug: 6. Arquivo persistence.xml <a id="arquivo-persistence"></a>
 
-> Documento usado para configurar as propriedades de conexão com o banco de dados.
+> Documento usado para configurar as propriedades de conexão com o banco de dados. Não é recomendado usar em produção.
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -468,7 +486,3 @@
 #### Callbacks para eventos do ciclo de vida
 
 > Eventos são CRUD: Create, Read, Update, Delete. E para cada evento, podemos ter um callback, ou seja, executar alguma ação na classe quando ocorre algum evento.
-
-## :world_map: 9. Mapeamento Avançado <a id="mapeamento-avancado"></a>
-
-
