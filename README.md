@@ -343,11 +343,24 @@
             <!-- configuração de geração de tabelas do banco, onde o valor indica que sempre que a aplicação subir, antes as tabelas serão limpas --->
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
 
-            <!-- roda um arquivo de comandos sql --->
+            <!-- roda um arquivo de comandos sql para criar as tabelas no banco de dados --->
+            <property name="javax.persistence.schema-generation.create-script-source" value="META-INF/banco-de-dados/script-criacao.sql"/>
+            <!-- roda um arquivo de comandos sql para excluir tabelas no banco de dados --->
+            <property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/banco-de-dados/script-remocao.sql"/>
+
+            <!-- roda um arquivo de comandos sql para carregar dados ao subir o banco --->
             <property name="jakarta.persistence.sql-load-script-source" value="META-INF/banco-de-dados/dados-iniciais.sql"/>
 
             <!-- dialetos específicos de cada banco, nessa propriedade estamos indicando que vamos usar o dialeto do MySQL --->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+
+            <!-- para exportar arquivos de criação e exclusão das tabelas do banco de dados -->
+            <property name="jakarta.persistence.schema-generation.scripts.action"
+                      value="drop-and-create"/>
+            <property name="jakarta.persistence.schema-generation.scripts.create-target"
+                      value="C:/Users/nunes/Downloads/script-criacao-exportado.sql"/>
+            <property name="jakarta.persistence.schema-generation.scripts.drop-target"
+                      value="C:/Users/nunes/Downloads/script-remocao-exportado.sql"/>
 
             <!-- mostra no console todos os comandos SQL gerados --->
             <property name="hibernate.show_sql" value="true" />
@@ -359,13 +372,21 @@
 </persistence>
 ```
 
+> É possível inserir ou sobrescrever propriedades do arquivo de persistência através de código Java.
+
 &nbsp;
 
 ## :file_folder: 7. Arquivos e Classes do Projeto <a id="arquivos"></a>
 
+### Base
+
+- EntidadeBaseInteger (id)
+
 ### Embeddable
 
+- Atributo (nome, valor)
 - EnderecoEntregaPedido (cep, logradouro, numero, complemento, bairro, cidade, estado)
+- ItemPedidoId (pedidoId, produtoId)
 
 ### Enumeration
 
@@ -373,20 +394,32 @@
 - StatusPagamento (PROCESSANDO, CANCELADO, RECEBIDO)
 - StatusPedido (AGUARDANDO, CANCELADO, PAGO)
 
+### Listener
+
+- GenericoListener
+- GerarNotaFiscalListener
+
 ### Model
 
 - Categoria (nome, categoriaPai, categorias, produtos)
-- Cliente (nome, sexo, pedidos)
+- Cliente (nome, cpf, contatos, primeiroNome, sexo, dataNascimento, pedidos)
 - Estoque (produto, quantidade)
 - ItemPedido (pedido, produto, precoProduto, quantidade)
 - NotaFiscal (pedido, xml, dataEmissao)
-- PagamentoBoleto (pedidoId, status, codigoBarras)
-- PagamentoBoleto (pedido, status, codigoBarras)
-- Pedido (cliente, itens, dataPedido, dataConclusao, notaFiscal, total, status, pagamento, enderecoEntrega)
-- Produto (nome, descricao, preco, categorias, estoque)
+- Pagamento (pedido, status)
+- PagamentoBoleto (codigoBarras)
+- PagamentoCartao (numeroCartao)
+- Pedido (cliente, itens, dataCriacao, dataUltimaAtualizacao, dataConclusao, notaFiscal, total, status, pagamento, enderecoEntrega)
+- Produto (dataCriacao, dataUltimaAtualizacao, nome, descricao, preco, foto, categorias, estoque, tags, atributos)
+
+### Service
+
+- NotaFiscalService
 
 ### Util
 
+- ExecutarDDL - adiciona propriedades de geração de tabelas no arquivo de persistência
+- ExportarDDL - adiciona propriedades de exportação de scripts sql
 - IniciarUnidadeDePersistencia - testa se a aplicação roda corretamente
 
 ### Resources 
@@ -398,6 +431,8 @@
 #### `META-INF/banco-de-dados/`
 
 - dados-iniciais.sql - registros adicionados, inicialmente para testes
+- script-criacao.sql - script usado para criar tabelas e afins no banco de dados
+- script-remocao.sql - script usado para remover tabelas e afins no banco de dados
 
 ### Testes
 
@@ -405,11 +440,37 @@
 
 - EntityManagerTest - classe genérica de testes
 
+#### `ecommerce/conhecendoentitymanager/`
+
+- CachePrimeiroNivelTest
+- CallbacksTest
+- ContextoDepersistenciaTest
+- EstadosECicloDeVidaTest
+- FlushTest
+- GerenciamentoTransacoesTest
+- ListenersTest
+
+#### `ecommerce/ddl/`
+
+- DDLTest
+
 #### `ecommerce/iniciandocomjpa/`
 
 - ConsultandoRegistrosTest
 - OperacoesComTransacaoTest
 - PrimeiroCrudTest
+
+#### `ecommerce/mapeamentoavancado/`
+
+- CarregarArquivo
+- ChaveCompostaTest
+- DetalhesColumnTest
+- ElementCollectionTest
+- HerancaTest
+- MapsIdTest
+- PropriedadesTransientesTest
+- SalvandoArquivoTest
+- SecondaryTableTest
 
 #### `ecommerce/mapeamentobasico/`
 
@@ -427,19 +488,6 @@
 - RelacionamentoOneToManyTest
 - RelacionamentoOneToOneTest
 - RemovendoEntidadesReferenciadasTest
-
-#### `ecommerce/conhecendoentitymanager/`
-
-- EstadosECicloDeVidaTest
-- CachePrimeiroNivelTest
-- GerenciamentoTransacoesTest
-- ContextoDepersistenciaTest
-- FlushTest
-- CallbacksTest
-
-#### `ecommerce/mapeamentoavancado/`
-
-- DetalhesColumnTest
 
 &nbsp;
 
