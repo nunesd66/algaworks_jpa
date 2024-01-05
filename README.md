@@ -17,6 +17,7 @@
 6. [Arquivo persistence.xml](#arquivo-persistence)
 7. [Arquivos e Classes do Projeto](#arquivos)
 8. [Estados e ciclo de vida dos objetos](#ciclo-vida)
+9. [Operações em cascata](#cascata)
 
 &nbsp;
 
@@ -252,6 +253,8 @@
 
 > Anotação que usa o atributo anotado da classe como sendo seu ID. Em chaves compostas é necessário anotar cada atributo que referencia a chave composta, informando o nome do atributo do ID composto: `@MapsId("nomeIdChaveComposta)`.
 
+> Quando usado essa anotação, não é necessário declarar o tipo de *cascade* usado no relacionamento, por ser anotações referentes aos identificadores da tabela.
+
 #### @Transient
 
 > Designa uma propriedade que deve sera ignorada pelo JPA.
@@ -478,6 +481,10 @@
 - MapeamentoObjetoEmbutidoTest
 - MapeandoEnumeracoesTest
 
+#### `ecommerce/operacoesemcascata/`
+
+- CascadeTypePersistTest
+
 #### `ecommerce/relacionamentos/`
 
 - AutoRelacionamentoTest
@@ -534,3 +541,15 @@
 #### Callbacks para eventos do ciclo de vida
 
 > Eventos são CRUD: Create, Read, Update, Delete. E para cada evento, podemos ter um callback, ou seja, executar alguma ação na classe quando ocorre algum evento.
+
+## :paperclips: 9. Operações em cascata <a id="cascata"></a>
+
+> Propriedade `cascade` no mapeamento de relacionamentos. Usada para executar ações em cascata, ou seja, em sequência. É possível fazer operações de inserção, atualização e remoção em cascata.
+> Quando utilizar o *cascade* ? Quando existe um relacionamento muito próximo entre 2 entidades.
+
+- **ALL** - ingloba todos os tipos de *cascade*.
+- **PERSIST** - tipo de persistência em cascata que persiste dados. 
+- **MERGE** - atualiza as entidades relacioadas.
+- **REMOVE** - remove as entidades relacioadas.
+
+> Propriedade orphanRemoval - usado para remover objetos órfãos, similar ao cascade remove. Só pode ser usada em relacionamentos *OneToOne* e *OneToMany*. Por padrão é falso.

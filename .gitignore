@@ -1,0 +1,6 @@
+# IDE
+/.idea
+/algaworks-ecommerce/*/.idea
+
+# target
+/algaworks-ecommerce/*/target
