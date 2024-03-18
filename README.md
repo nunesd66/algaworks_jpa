@@ -18,6 +18,7 @@
 7. [Arquivos e Classes do Projeto](#arquivos)
 8. [Estados e ciclo de vida dos objetos](#ciclo-vida)
 9. [Operações em cascata](#cascata)
+10. 10. [JPQL](#jpql)
 
 &nbsp;
 
@@ -553,3 +554,13 @@
 - **REMOVE** - remove as entidades relacioadas.
 
 > Propriedade orphanRemoval - usado para remover objetos órfãos, similar ao cascade remove. Só pode ser usada em relacionamentos *OneToOne* e *OneToMany*. Por padrão é falso.
+
+## :newspaper: 10. JPQL <a id="jpql"></a>
+
+- Java Persistence Query Language
+- Linguagem de persistência de dados escrita referenciando objetos do Java.
+
+### TypedQuery e Query
+
+> Ambas usam JPQL, com a diferença que o TypedQuery é tipado e o Query não.
+
