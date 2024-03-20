@@ -564,3 +564,14 @@
 
 > Ambas usam JPQL, com a diferença que o TypedQuery é tipado e o Query não.
 
+#### INNER JOIN
+
+> Compara cada linha da tabela A com as linhas da tabela B para encontrar todos os pares de linhas que satisfazem a condição de junção.
+
+#### LEFT OUTER JOIN
+
+> Para criar uma junção externa esquerda. As junções externas esquerdas incluem todos os registros da primeira de duas tabelas (a da esquerda), mesmo se não houver valores correspondentes na segunda tabela (à direita). 
+
+#### JOIN FETCH
+
+> Usado para carregamento de entidades mapeadas com FETCH.LAZE (padrão)
