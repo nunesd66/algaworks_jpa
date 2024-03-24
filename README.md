@@ -575,3 +575,9 @@
 #### JOIN FETCH
 
 > Usado para carregamento de entidades mapeadas com FETCH.LAZE (padrão)
+
+#### PATCH EXPRESSION
+
+> Percorrer um caminho para chega a determinada propriedade: "select p.cliente.nome from Pedido p"
+
+

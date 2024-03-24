@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BasicoJPQLTests extends EntityManagerTest {
+public class BasicoJPQLTest extends EntityManagerTest {
 
     @Test
     public void projetarNoDTO() {
