@@ -15,6 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BasicoJPQLTest extends EntityManagerTest {
 
     @Test
+    public void ordenarResultados() {
+        String jpql = "select c from Cliente c order by c.nome asc";
+
+        TypedQuery<ProdutoDTO> typedQuery = entityManager.createQuery(jpql, ProdutoDTO.class);
+        List<ProdutoDTO> lista = typedQuery.getResultList();
+        assertFalse(lista.isEmpty());
+    }
+
+    @Test
     public void projetarNoDTO() {
         String jpql = "select new com.nunesd66.ecommerce.dto.ProdutoDTO(id, nome) from Produto";
         TypedQuery<ProdutoDTO> typedQuery = entityManager.createQuery(jpql, ProdutoDTO.class);
