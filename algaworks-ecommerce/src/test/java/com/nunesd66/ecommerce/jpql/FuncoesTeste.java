@@ -1,7 +1,9 @@
 package com.nunesd66.ecommerce.jpql;
 
 import com.nunesd66.ecommerce.EntityManagerTest;
+import com.nunesd66.ecommerce.model.Pedido;
 import jakarta.persistence.TypedQuery;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
@@ -9,8 +11,35 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FuncoesTeste extends EntityManagerTest {
+
+    @Test
+    public void aplicarFuncoesAgregacao() {
+        // avg, count, min, max, sum
+
+        String jpql = "select avg(p.total) from Pedido p";
+
+        TypedQuery<Number> typedQuery = entityManager.createQuery(jpql, Number.class);
+
+        List<Number> lista = typedQuery.getResultList();
+        Assertions.assertFalse(lista.isEmpty());
+
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    public void aplicarFuncoesNativas() {
+        String jpql = "select p from Pedido p where function('acima_media_faturamento', p.total) = 1";
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(jpql, Pedido.class);
+
+        List<Pedido> lista = typedQuery.getResultList();
+        Assertions.assertFalse(lista.isEmpty());
+
+        lista.forEach(System.out::println);
+    }
 
     @Test
     public void aplicarFuncaoData() {
