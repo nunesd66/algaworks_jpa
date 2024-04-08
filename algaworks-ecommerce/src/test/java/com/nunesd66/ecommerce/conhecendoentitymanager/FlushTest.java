@@ -3,6 +3,7 @@ package com.nunesd66.ecommerce.conhecendoentitymanager;
 import com.nunesd66.ecommerce.EntityManagerTest;
 import com.nunesd66.ecommerce.enumeration.StatusPedido;
 import com.nunesd66.ecommerce.model.Pedido;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
