@@ -1,16 +1,7 @@
 # IDE
 /.idea
 /algaworks-ecommerce/*/.idea
-/algaworks-ecommerce/target
-/algaworks-ecommerce/target/*
 
 # target
-/algaworks-ecommerce/*/target
 /algaworks-ecommerce/target/
-.classpath
-.project
-.settings/
-target/
-/target/
-!target/
-target/site/*
+algaworks-ecommerce/target/

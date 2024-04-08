@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.nunesd66.ecommerce.operacoesemcascata.CascadeTypeRemoveTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.676 s -- in com.nunesd66.ecommerce.operacoesemcascata.CascadeTypeRemoveTest
