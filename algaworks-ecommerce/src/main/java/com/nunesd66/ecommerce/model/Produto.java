@@ -1,6 +1,7 @@
 package com.nunesd66.ecommerce.model;
 
 import com.nunesd66.ecommerce.base.EntidadeBaseInteger;
+import com.nunesd66.ecommerce.dto.ProdutoDTO;
 import com.nunesd66.ecommerce.embeddable.Atributo;
 import com.nunesd66.ecommerce.listener.GenericoListener;
 import jakarta.persistence.*;
@@ -16,6 +17,37 @@ import static org.hibernate.Length.LONG32;
 
 @Getter
 @Setter
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "produto_loja.listar",
+                query = "select * from produto_loja",
+                resultClass = Produto.class),
+        @NamedNativeQuery(name = "ecm_produto.listar",
+                query = "select * from ecm_produto",
+                resultSetMapping = "ecm_produto.Produto")
+})
+
+@SqlResultSetMappings({
+        @SqlResultSetMapping(name = "produto_loja.Produto",
+                entities = { @EntityResult(entityClass = Produto.class) }),
+        @SqlResultSetMapping(name = "ecm_produto.Produto",
+                entities = { @EntityResult(entityClass = Produto.class,
+                        fields = {
+                            @FieldResult(name = "id", column = "prd_id"),
+                            @FieldResult(name = "nome", column = "prd_nome"),
+                            @FieldResult(name = "descricao", column = "prd_descricao"),
+                            @FieldResult(name = "preco", column = "prd_preco"),
+                            @FieldResult(name = "foto", column = "prd_foto"),
+                            @FieldResult(name = "dataCriacao", column = "prd_data_criacao"),
+                            @FieldResult(name = "dataUltimaAtualizacao", column = "prd_data_ultima_atualizacao"),
+                        }) }),
+        @SqlResultSetMapping(name = "ecm_produto.ProdutoDTO",
+                classes = { @ConstructorResult(targetClass = ProdutoDTO.class,
+                        columns = {
+                            @ColumnResult(name = "prd_id", type = Integer.class),
+                            @ColumnResult(name = "prd_nome", type = String.class),
+                        })
+        })
+})
 @NamedQueries({
         @NamedQuery(name = "Produto.listar",
                 query = "select p from Produto p"),
