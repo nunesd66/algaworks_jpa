@@ -3,6 +3,7 @@ package com.nunesd66.ecommerce.model;
 import com.nunesd66.ecommerce.base.EntidadeBaseInteger;
 import com.nunesd66.ecommerce.enumeration.SexoCliente;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,12 +28,16 @@ import java.util.Map;
         indexes = {@Index(name = "idx_nome", columnList = "nome")})
 public class Cliente extends EntidadeBaseInteger {
 
+    @NotBlank
     @Column(length = 100, nullable = false)
     private String nome;
 
+    @NotNull
+    @Pattern(regexp = "(^\\d{3}\\x2E\\d{3}\\x2E\\d{3}\\x2D\\d{2}$)")
     @Column(length = 14, nullable = false)
     private String cpf;
 
+    @NotEmpty
     @ElementCollection
     @CollectionTable(name = "cliente_contato",
             joinColumns = @JoinColumn(name = "cliente_id", nullable = false,
@@ -44,6 +49,7 @@ public class Cliente extends EntidadeBaseInteger {
     @Transient
     private String primeiroNome;
 
+    @NotNull
     @Column(table = "cliente_detalhe", length = 30, nullable = false)
     @Enumerated(EnumType.STRING)
     private SexoCliente sexo;

@@ -2,6 +2,7 @@ package com.nunesd66.ecommerce.model;
 
 import com.nunesd66.ecommerce.base.EntidadeBaseInteger;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.List;
         uniqueConstraints = { @UniqueConstraint(name = "unq_nome", columnNames = {"nome"}) })
 public class Categoria extends EntidadeBaseInteger {
 
+    @NotBlank
     @Column(length = 100, nullable = false)
     private String nome;
 

@@ -1,10 +1,12 @@
 package com.nunesd66.ecommerce.model;
 
 import com.nunesd66.ecommerce.base.EntidadeBaseInteger;
+import com.nunesd66.ecommerce.converter.BooleanToSimNaoConverter;
 import com.nunesd66.ecommerce.dto.ProdutoDTO;
 import com.nunesd66.ecommerce.embeddable.Atributo;
 import com.nunesd66.ecommerce.listener.GenericoListener;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -61,12 +63,16 @@ import static org.hibernate.Length.LONG32;
         indexes = { @Index(name = "idx_nome", columnList = "nome") })
 public class Produto extends EntidadeBaseInteger {
 
+    @PastOrPresent
+    @NotNull
     @Column(name = "data_criacao", updatable = false, nullable = false)
     private LocalDateTime dataCriacao;
 
+    @PastOrPresent
     @Column(name = "data_ultima_atualizacao", insertable = false)
     private LocalDateTime dataUltimaAtualizacao;
 
+    @NotBlank
     @Column(length = 100, nullable = false)
     private String nome;
 
@@ -74,11 +80,17 @@ public class Produto extends EntidadeBaseInteger {
     @Column(length = LONG32)
     private String descricao;
 
+    @Positive
     private BigDecimal preco;
 
     @Lob
     @Column(length = LONG)
     private byte[] foto;
+
+    @Convert(converter = BooleanToSimNaoConverter.class)
+    @NotNull
+    @Column(length = 3, nullable = false)
+    private Boolean ativo = Boolean.FALSE;
 
     @ManyToMany()
 //    @ManyToMany(cascade = CascadeType.MERGE)
