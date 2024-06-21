@@ -43,6 +43,7 @@ import java.util.List;
         )
 })
 @EntityListeners({GerarNotaFiscalListener.class, GenericoListener.class})
+@Cacheable()
 @Entity
 @Table(name = "pedido")
 public class Pedido extends EntidadeBaseInteger
