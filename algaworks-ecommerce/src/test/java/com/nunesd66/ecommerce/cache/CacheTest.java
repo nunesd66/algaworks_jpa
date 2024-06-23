@@ -1,5 +1,6 @@
 package com.nunesd66.ecommerce.cache;
 
+import com.nunesd66.ecommerce.EntityManagerFactoryTest;
 import com.nunesd66.ecommerce.model.Pedido;
 import jakarta.persistence.*;
 import org.junit.jupiter.api.AfterAll;
@@ -12,30 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CacheTest {
-    protected static EntityManagerFactory entityManagerFactory;
-
-    @BeforeAll
-    public static void setUpBeforeClass() {
-        entityManagerFactory = Persistence
-                .createEntityManagerFactory("Ecommerce-PU");
-    }
-
-    @AfterAll
-    public static void tearDownAfterClass() {
-        entityManagerFactory.close();
-    }
-
-    private static void esperar(int segundos) {
-        try {
-            Thread.sleep(segundos * 1000);
-        } catch (InterruptedException e) {}
-
-    }
-
-    private static void log(String msg) {
-        System.out.println(msg);
-    }
+public class CacheTest extends EntityManagerFactoryTest {
 
     @Test
     public void ehCache() {

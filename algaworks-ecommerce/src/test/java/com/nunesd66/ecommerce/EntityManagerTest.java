@@ -5,21 +5,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
-public class EntityManagerTest {
-
-    protected static EntityManagerFactory entityManagerFactory;
+public class EntityManagerTest extends EntityManagerFactoryTest {
 
     protected EntityManager entityManager;
-
-    @BeforeAll
-    public static void setUpBeforeClass() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("Ecommerce-PU");
-    }
-
-    @AfterAll
-    public static void tearDownAfterClass() {
-        entityManagerFactory.close();
-    }
 
     @BeforeEach
     public void setUp() {
